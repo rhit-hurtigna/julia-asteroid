@@ -1,4 +1,4 @@
-# Run with julia matrixExample.jl
+# Run with julia matrixSerialExample.jl
 matrix1 = [1 2 3 4 
     5 6 7 8
     9 10 11 12
@@ -21,4 +21,4 @@ result = matr_column_sum(matrix1)
 println("Starting Matrix ")
 display(matrix1) #Fancy way to display more info about matrix
 println("Sums of Columns: $result") # dollar sign format to print
-
+println("Should be should be [28 32 36 40]") 

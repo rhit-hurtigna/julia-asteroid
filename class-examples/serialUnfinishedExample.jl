@@ -6,9 +6,7 @@ using Distributed
 #Timer in current release is bugged, counts some setup time so this negates that
 #Ignore this
 t = @elapsed begin
-    nheads = @distributed (+) for i = 1:200
-      Int(rand(Bool))
-    end
+    true
 end
 ##
 
