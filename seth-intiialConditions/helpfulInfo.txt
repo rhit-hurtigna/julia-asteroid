@@ -1,0 +1,21 @@
+https://nssdc.gsfc.nasa.gov/planetary/factsheet/planetfact_notes.html
+https://www.nasa.gov/audience/forstudents/5-8/features/nasa-knows/what-is-orbit-58.html
+https://nssdc.gsfc.nasa.gov/planetary/factsheet/
+https://ssd.jpl.nasa.gov/planets/approx_pos.html#tables
+https://ssd.jpl.nasa.gov/horizons/tutorial.html
+https://ssd.jpl.nasa.gov/horizons/#web
+https://ssd.jpl.nasa.gov/horizons/
+https://ssd.jpl.nasa.gov/planets/approx_pos.html
+https://en.wikipedia.org/wiki/Kepler%27s_laws_of_planetary_motion
+https://ssd.jpl.nasa.gov/glossary/ephemeris.html
+https://stjarnhimlen.se/comp/tutorial.html
+https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/Tutorials/pdf/individual_docs/04_concepts.pdf
+http://murison.alpheratz.net/dynamics/twobody/KeplerIterations_summary.pdf
+https://en.wikipedia.org/wiki/Newton%27s_method
+https://space.stackexchange.com/questions/55356/how-to-find-eccentric-anomaly-by-mean-anomaly
+https://web.archive.org/web/20210308074603/https://ssd.jpl.nasa.gov/txt/aprx_pos_planets.pdf Maybe actual details!
+https://orbital-mechanics.space/reference/planetary-ephemeris.html
+https://www.bogan.ca/orbits/kepler/e_anomly.html
+https://pwg.gsfc.nasa.gov/stargaze/Smotion.htm
+Astronomical Algorithms 2nd ed. by Jean Meeus
+https://archive.org/details/astronomicalalgorithmsjeanmeeus1991
