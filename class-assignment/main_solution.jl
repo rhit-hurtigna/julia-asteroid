@@ -17,13 +17,13 @@ addprocs(5)
 # The bounds include M and N.
 #
 function count_primes_parallel(M, N)
-    num_primes = 0
-    for i = M:N
+    @distributed (+) for i = M:N
         if isprime(i)
-            num_primes += 1
+            1
+        else
+            0
         end
     end
-    num_primes # the last value returns in Julia
 end
 
 # Don't modify this -- we use it for testing
@@ -57,15 +57,17 @@ end
 #
 function matr_mult_parallel(A, B, N)
     C = zeros(N, N)
-    for row_index = 1:N
+    C = @distributed (vcat) for row_index = 1:N
+        myRowVec = zeros(1, N)
         for col_index = 1:N
             row_of_A = A[row_index, :]
             col_of_B = B[:, col_index]
             dot_product_of_both = sum(row_of_A .* col_of_B)
-            C[row_index, col_index] = dot_product_of_both
+            myRowVec[col_index] = dot_product_of_both
         end
+        myRowVec
     end
-    C
+    C # the last value returns in Julia
 end
 
 matrix_mult_results = @testset "matrix multiplication" begin
