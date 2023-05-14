@@ -1,6 +1,6 @@
 using Distributed
 
-# Run with julia parallelExample.jl
+# Run with julia parallelFinishedExample.jl
 
 addprocs(5) #TODO: Change me to see how the speed changes!
 
