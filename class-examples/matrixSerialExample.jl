@@ -7,7 +7,7 @@ matrix1 = [1 2 3 4
 
 function matr_column_sum(A)
     numRows,numCols = size(A)
-    result = zeros(1,numCols) #makes a matrix of zeroes of this dimension
+    result = zeros(1,numCols) #makes a zero row vector of this dimension
     for col_index = 1:numCols
         result[col_index] = 0
         for row_index = 1:numRows
