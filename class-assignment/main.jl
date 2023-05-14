@@ -9,6 +9,8 @@ addprocs(5)
 @everywhere using Primes
 
 #
+# TODO: make this function parallel.
+#
 # INPUTS:
 # M, N -- positive integers. M < N
 #
@@ -48,12 +50,17 @@ end
 end
 
 #
+# TODO: make this function parallel.
+#
 # INPUTS:
 # A, B -- NxN matrices
 # N -- positive integer
 #
 # OUTPUTS:
 # C -- NxN matrix, C = A * B
+#
+# HINT: vcat stacks row vectors on top of
+# each other to form a matrix
 #
 function matr_mult_parallel(A, B, N)
     C = zeros(N, N)
