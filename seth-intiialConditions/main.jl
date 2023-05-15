@@ -13,20 +13,25 @@ Mercury_longPeri0 = 77.45779628
 Mercury_longPeriCy = 0.16047689
 Mercury_longNode0 =  48.33076593
 Mercury_longNodeCy = -0.12534081
-CurrentJulianDay = 2460078.500000000
+CurrentJulianDay = 2460079.500000000
 CurrentT = (CurrentJulianDay - 2451545.0)/36525
 
-Mercury_e = Mercury_e0 + Mercury_eCy*CurrentT
 Mercury_a = Mercury_a0 + Mercury_aCy*CurrentT
+Mercury_e = Mercury_e0 + Mercury_eCy*CurrentT
 Mercury_I = Mercury_I0 + Mercury_ICy*CurrentT
 Mercury_L = Mercury_L0 + Mercury_LCy*CurrentT
+print("Mercury_L is $Mercury_L\n")
 Mercury_longPeri = Mercury_longPeri0 + Mercury_longPeriCy*CurrentT
+print("Mercury_longPeri is $Mercury_longPeri\n")
 Mercury_longNode = Mercury_longNode0 + Mercury_longNodeCy*CurrentT
 
 Mercury_W = Mercury_longPeri - Mercury_longNode
 Mercury_M = Mercury_L - Mercury_longPeri
-Mercury_M = mod(Mercury_M,180)
-print("Mercury_M is $Mercury_M\n")
+print("Mercury_M is $Mercury_M before modulo\n")
+while Mercury_M>180
+    global Mercury_M = Mercury_M-360
+end
+print("Mercury_M is $Mercury_M post modulo\n")
 # print("Mercury_M mod is  $(Mercury_M%180)\n")
 
 function iterateOnE(Planet_M,Planet_e,Planet_EN,Planet_EStar)
