@@ -25,7 +25,7 @@ Mercury_longNode = Mercury_longNode0 + Mercury_longNodeCy*CurrentT
 
 Mercury_W = Mercury_longPeri - Mercury_longNode
 Mercury_M = Mercury_L - Mercury_longPeri
-Mercury_M = Mercury_M%180
+Mercury_M = mod(Mercury_M,180)
 print("Mercury_M is $Mercury_M\n")
 # print("Mercury_M mod is  $(Mercury_M%180)\n")
 
@@ -40,7 +40,8 @@ Mercury_E0 = Mercury_M - Mercury_EStar*sind(Mercury_M)
 Mercury_EN = iterateOnE(Mercury_M,Mercury_e,Mercury_E0,Mercury_EStar)
 Mercury_ENPrev = Mercury_E0
 count = 0
-while (abs(Mercury_EN-Mercury_ENPrev))>0.0000001 && count <= 100
+# while count <=100
+while (abs(Mercury_EN-Mercury_ENPrev))>0.0000001 && count <= 10
     print("$(Mercury_EN-Mercury_ENPrev)\n")
     global Mercury_ENPrev = Mercury_EN
     global count = count+1
@@ -48,9 +49,19 @@ while (abs(Mercury_EN-Mercury_ENPrev))>0.0000001 && count <= 100
     # print("$(Mercury_EN)\n")
 end
 print("$(Mercury_EN-Mercury_ENPrev)\n")
+print("EN turned out to be $Mercury_EN\n")
 Mercury_XP = Mercury_a*(cosd(Mercury_EN)-Mercury_e)
 Mercury_YP = Mercury_a*sqrt(1-Mercury_e^2)*sind(Mercury_EN)
 Mercury_ZP = 0
-Mercury_XECL = (cosd(Mercury_W)*cosd(Mercury_longNode)-(sind(Mercury_W)*sind(Mercury_longNode)*cosd(Mercury_I)))*Mercury_XP+(-sind(Mercury_W)*cosd(Mercury_longNode))-(cosd(Mercury_W)*sind(Mercury_longNode)*cosd(Mercury_I))*Mercury_YP
-print("Mercury_XECL may be $Mercury_XECL\n")
-print("$(Mercury_EN-Mercury_ENPrev) hopefully this works\n")
+Mercury_XECL = (cosd(Mercury_W)*cosd(Mercury_longNode)-sind(Mercury_W)*sind(Mercury_longNode)*cosd(Mercury_I))*Mercury_XP + (-sind(Mercury_W)*cosd(Mercury_longNode)-cosd(Mercury_W)*sind(Mercury_longNode)*cosd(Mercury_I))*Mercury_YP
+Mercury_YECL = (cosd(Mercury_W)*sind(Mercury_longNode)+sind(Mercury_W)*cosd(Mercury_longNode)*cosd(Mercury_I))*Mercury_XP + (-sind(Mercury_W)*sind(Mercury_longNode)+cosd(Mercury_W)*cosd(Mercury_longNode)*cosd(Mercury_I))*Mercury_YP
+Mercury_ZECL = (sind(Mercury_W)*sind(Mercury_I))*Mercury_XP+(cosd(Mercury_W)*sind(Mercury_I))*Mercury_YP
+ObliquityJ200 = 23.43928
+Mercury_XEQ = Mercury_XECL
+Mercury_YEQ = cosd(ObliquityJ200)*Mercury_YECL-sind(ObliquityJ200)*Mercury_ZECL
+Mercury_ZEQ = sind(ObliquityJ200)*Mercury_YECL+cosd(ObliquityJ200)*Mercury_ZECL 
+print("Mercury_XP $Mercury_XP\n")
+print("Mercury_XEQ may be $Mercury_XEQ\n")
+print("Mercury_YEQ may be $Mercury_YEQ\n")
+print("Mercury_ZEQ may be $Mercury_ZEQ\n")
+# print("$(Mercury_EN-Mercury_ENPrev) hopefully this works\n")
