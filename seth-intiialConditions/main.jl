@@ -1,25 +1,38 @@
 using Distributed
 using LinearAlgebra
+#Mercury, Venus, Earth-Moon Baryoncenter, Mars
 PlanetIntialValues = [Dict([
-    ("Planet_a0",0.38709927),("Planet_aCY",0.00000037),
-    ("Planet_e0",0.20563593),("Planet_eCy",0.00001906),
-    ("Planet_I0",7.00497902),("Planet_ICy",-0.00594749),
-    ("Planet_L0",252.25032350),("Planet_LCy",149472.67411175),
-    ("Planet_longPeri0",77.45779628),("Planet_longPeriCy",0.16047689),
-    ("Planet_longNode0",48.33076593),("Planet_longNodeCy",-0.12534081),
+    ("Planet_a0",0.38709843),("Planet_aCY",0.00000000),
+    ("Planet_e0",0.20563661),("Planet_eCy",0.00002123),
+    ("Planet_I0",7.00559432),("Planet_ICy",-0.00590158),
+    ("Planet_L0",252.25166724),("Planet_LCy",149472.67486623),
+    ("Planet_longPeri0",77.45771895),("Planet_longPeriCy",0.15940013),
+    ("Planet_longNode0",48.33961819),("Planet_longNodeCy",-0.12214182),
     ("Planet_mass",0.0533)]),
     Dict([
-    ("Planet_a0",1.00000261),("Planet_aCY",0.00000562),
-    ("Planet_e0",0.01671123),("Planet_eCy",-0.00004392),
-    ("Planet_I0",-0.00001531),("Planet_ICy",-0.01294668),
-    ("Planet_L0",100.46457166),("Planet_LCy",35999.37244981),
-    ("Planet_longPeri0",102.93768193),("Planet_longPeriCy",0.32327364),
-    ("Planet_longNode0",0.0),("Planet_longNodeCy",0.0),
-    ("Planet_b",0),
-    ("Planet_c",0),
-    ("Planet_s",0),
-    ("Planet_f",0),
-    ("Planet_mass",1)])];
+    ("Planet_a0",0.72332102),("Planet_aCY",-0.00000026),
+    ("Planet_e0",0.00676399),("Planet_eCy",-0.00005107),
+    ("Planet_I0",3.39777545),("Planet_ICy",0.00043494),
+    ("Planet_L0",181.97970850),("Planet_LCy",58517.81560260),
+    ("Planet_longPeri0",0.05679648),("Planet_longPeriCy",102.93005885),
+    ("Planet_longNode0",-0.27274174),("Planet_longNodeCy",-5.11260389),
+    ("Planet_mass",0.815)]),
+    Dict([
+    ("Planet_a0",1.00000018),("Planet_aCY",-0.00000003),
+    ("Planet_e0",0.01673163),("Planet_eCy",-0.00003661),
+    ("Planet_I0",-0.00054346),("Planet_ICy",-0.01337178),
+    ("Planet_L0",100.46691572),("Planet_LCy",35999.37306329),
+    ("Planet_longPeri0",102.93005885),("Planet_longPeriCy",0.31795260),
+    ("Planet_longNode0",-5.11260389),("Planet_longNodeCy",-0.24123856),
+    ("Planet_mass",1)]),
+    Dict([
+    ("Planet_a0",1.52371243),("Planet_aCY",0.00000097),
+    ("Planet_e0",0.09336511),("Planet_eCy",0.00009149),
+    ("Planet_I0",1.85181869),("Planet_ICy",-0.00724757),
+    ("Planet_L0",-4.56813164),("Planet_LCy",19140.29934243),
+    ("Planet_longPeri0",-23.91744784),("Planet_longPeriCy",0.45223625),
+    ("Planet_longNode0",49.71320984),("Planet_longNodeCy",-0.26852431),
+    ("Planet_mass",0.107)])];
 
 
 
@@ -203,9 +216,9 @@ Planet_Velocities = Planet_ECLOffset-Planet_ECL
     # Planet_Velocity[i] = Planet_ECLOffset[i]-Planet_ECL[i]
 # end
 # Planet_Velocity = Planet_ECL-Planet_ECLOffset
-print("Planet positions Mercury,Earth (X,Y,Z)\n")
+print("Planet positions Mercury,Venus,Earth,Mars (X,Y,Z)\n")
 Base.print_matrix(stdout, Planet_ECL)
-print("\nPlanet velocities Mercury,Earth (X,Y,Z)\n")
+print("\nPlanet velocities Mercury,Venus,Earth,Mars (X,Y,Z)\n")
 Base.print_matrix(stdout, Planet_Velocities)
 # print("Mercury_XECL may be $(Planet_ECL[1][1])\n")
 # print("Mercury_YECL may be $(Planet_ECL[1][2])\n")
