@@ -4,6 +4,9 @@ using Genie, Genie.Router,Plots, Printf, Base64
 using Genie.Renderer, Genie.Renderer.Html, Genie.Renderer.Json, Genie.Requests
 using Dates
 
+include("../glue/glue.jl")
+using .Glue
+
 # route("/") do
 #     html("Hello World")
 # end
@@ -73,9 +76,12 @@ route("/", method = POST) do
     steps=parseInt(postpayload(:steps, "0"))
     )
 
-    print(location)
+    do_glue(location.name, [location.x location.y location.z], 
+    [location.xs location.ys location.zs], location.mass, location.start_days_since_2000, 
+    location.end_days_since_2000, location.steps)
+    # print(location)
     # html("Location  $(location.test), $(location.lat), $(location.lon) created successfully!")
-    open("andrew-web/anim_fps15.gif") do f
+    open("glue_anims/$(location.name).gif") do f
         data = base64encode(read(f, String))
         html("""<img src="data:andrew-web/anim_fps15.gif;base64,$data">""")
         # html(read(f,String))
