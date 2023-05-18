@@ -1,3 +1,5 @@
+module SethStuff
+export findPositionFromDate
 using Distributed
 using LinearAlgebra
 #Mercury, Venus, Earth-Moon Baryoncenter, Mars
@@ -84,27 +86,27 @@ end
 function calculateMoreValues(Planet_Values,CurrentT)
     Planet_W = Planet_Values["Planet_longPeri"] - Planet_Values["Planet_longNode"] + get(Planet_Values,"Planet_b",0)*(CurrentT^2) + get(Planet_Values,"Planet_c",0)*cosd(get(Planet_Values,"Planet_f",0)*CurrentT) + get(Planet_Values,"Planet_s",0)*sind(get(Planet_Values,"Planet_f",0)*CurrentT)
     Planet_M = Planet_Values["Planet_L"] - Planet_Values["Planet_longPeri"]
-    print("Planet_W is $Planet_W\n")
-    print("Planet_M is $Planet_M before modulo\n")
+    # print("Planet_W is $Planet_W\n")
+    # print("Planet_M is $Planet_M before modulo\n")
     while(Planet_M>180)
         Planet_M = Planet_M-360
     end
-    print("Planet_M is $Planet_M post modulo\n")
+    # print("Planet_M is $Planet_M post modulo\n")
     Planet_EStar = (180/pi)*Planet_Values["Planet_e"]
-    print("Planet_EStar is $Planet_EStar\n")
+    # print("Planet_EStar is $Planet_EStar\n")
     Planet_E0 = Planet_M - Planet_EStar*sind(Planet_M)
     Planet_EN = iterateOnE(Planet_M,Planet_Values["Planet_e"],Planet_E0,Planet_EStar)
-    print("Planet_EN first iteration is $Planet_EN\n")
+    # print("Planet_EN first iteration is $Planet_EN\n")
     Planet_ENPrev = Planet_E0
     count = 0
     while(abs(Planet_EN-Planet_ENPrev))>0.0000001 && count <= 100
-        print("iteration of EN de is $(Planet_EN-Planet_ENPrev)\n")
+        # print("iteration of EN de is $(Planet_EN-Planet_ENPrev)\n")
         Planet_ENPrev = Planet_EN
         count = count+1
         Planet_EN = iterateOnE(Planet_M,Planet_Values["Planet_e"],Planet_EN,Planet_EStar)
     end
-    print("Final DE $(Planet_EN-Planet_ENPrev)\n")
-    print("Planet_EN is $Planet_EN\n")
+    # print("Final DE $(Planet_EN-Planet_ENPrev)\n")
+    # print("Planet_EN is $Planet_EN\n")
     Planet_Values["Planet_W"] = Planet_W
     Planet_Values["Planet_EN"] = Planet_EN
 end
@@ -150,7 +152,7 @@ end
 # Mercury_ZP = 0
 function findPlanetHeliocentricInOwnOrbitalPlaneCoordinates(Planet_a,Planet_EN,Planet_e)
     Planet_XP = Planet_a*(cosd(Planet_EN)-Planet_e)
-    print("THE XP IS $Planet_XP\n") # This is wrong, fix this part
+    # print("THE XP IS $Planet_XP\n") # This is wrong, fix this part
     Planet_YP = Planet_a*sqrt(1-Planet_e^2)*sind(Planet_EN)
     Planet_ZP = 0
     [Planet_XP, Planet_YP, Planet_ZP]
@@ -216,10 +218,10 @@ Planet_Velocities = Planet_ECLOffset-Planet_ECL
     # Planet_Velocity[i] = Planet_ECLOffset[i]-Planet_ECL[i]
 # end
 # Planet_Velocity = Planet_ECL-Planet_ECLOffset
-print("Planet positions Mercury,Venus,Earth,Mars (X,Y,Z)\n")
-Base.print_matrix(stdout, Planet_ECL)
-print("\nPlanet velocities Mercury,Venus,Earth,Mars (X,Y,Z)\n")
-Base.print_matrix(stdout, Planet_Velocities)
+# print("Planet positions Mercury,Venus,Earth,Mars (X,Y,Z)\n")
+# Base.print_matrix(stdout, Planet_ECL)
+# print("\nPlanet velocities Mercury,Venus,Earth,Mars (X,Y,Z)\n")
+# Base.print_matrix(stdout, Planet_Velocities)
 # print("Mercury_XECL may be $(Planet_ECL[1][1])\n")
 # print("Mercury_YECL may be $(Planet_ECL[1][2])\n")
 # print("Mercury_ZECL may be $(Planet_ECL[1][3])\n")
@@ -231,3 +233,4 @@ Base.print_matrix(stdout, Planet_Velocities)
 # print("Mercury_YEQ may be $(Mercury_EQ[2])\n")
 # print("Mercury_ZEQ may be $(Mercury_EQ[3])\n")
 # print("$(Mercury_EN-Mercury_ENPrev) hopefully this works\n")
+end

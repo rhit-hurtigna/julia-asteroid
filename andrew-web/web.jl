@@ -16,19 +16,19 @@ form = """
   <label for="name">Job name</label>
   <input id='name' type="text" name="name" value="" placeholder="Job name" /><br>
   <label for="mass">Asteroid Mass</label>
-  <input id='mass' type="number" min="0" name="mass" value="" placeholder="Asteroid mass" /><br>
+  <input id='mass' type="text" min="0" name="mass" value="" placeholder="Asteroid mass" /><br>
   <label for="x">X position</label>
-  <input id='x' type="number" name="x" value="" placeholder="Some Starting x" /><br>
+  <input id='x' type="text" name="x" value="" placeholder="Some Starting x" /><br>
   <label for='y'>Y position</label>
-  <input id='y' type="number" name="y" value="" placeholder="Some Starting y" /><br>
+  <input id='y' type="text" name="y" value="" placeholder="Some Starting y" /><br>
   <label for="z">Z position</label>
-  <input id='z' type="number" name="z" value="" placeholder="Some Starting z" /><br>
+  <input id='z' type="text" name="z" value="" placeholder="Some Starting z" /><br>
   <label for='xs'>X velocity</label>
-  <input id='xs' type="number" name="xs" value="" placeholder="Some Starting x velocity" /><br>
+  <input id='xs' type="text" name="xs" value="" placeholder="Some Starting x velocity" /><br>
   <label for="ys">Y velocity</label>
-  <input id='ys' type="number" name="ys" value="" placeholder="Some Starting y velocity" /><br>
+  <input id='ys' type="text" name="ys" value="" placeholder="Some Starting y velocity" /><br>
   <label for='zs'>Z velocity</label>
-  <input id='zs' type="number" name="zs" value="" placeholder="Some Starting z velocity" /><br>
+  <input id='zs' type="text" name="zs" value="" placeholder="Some Starting z velocity" /><br>
   <label for='start_date'>Simulation start</label>
   <input id='start_date' type="date" name="start" value="" placeholder="Start date" /><br>
   <label for='end_date'>Simulation end</label>
@@ -80,7 +80,7 @@ route("/", method = POST) do
     [location.xs location.ys location.zs], location.mass, location.start_days_since_2000, 
     location.end_days_since_2000, location.steps)
     # print(location)
-    # html("Location  $(location.test), $(location.lat), $(location.lon) created successfully!")
+    html("Calculating the thing...")
     open("glue_anims/$(location.name).gif") do f
         data = base64encode(read(f, String))
         html("""<img src="data:andrew-web/anim_fps15.gif;base64,$data">""")
