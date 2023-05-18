@@ -2,6 +2,7 @@
 # ] add genie (Inside the Julia terminal thingy)
 using Genie, Genie.Router,Plots, Printf, Base64
 using Genie.Renderer, Genie.Renderer.Html, Genie.Renderer.Json, Genie.Requests
+using Dates
 
 # route("/") do
 #     html("Hello World")
@@ -9,9 +10,28 @@ using Genie.Renderer, Genie.Renderer.Html, Genie.Renderer.Json, Genie.Requests
 
 form = """
 <form action="/" method="POST" enctype="multipart/form-data">
-  <input type="text" name="test" value="" placeholder="Some Starting Value" />
-  <input type="text" name="lat" value="" placeholder="Some Starting lat" />
-  <input type="text" name="lon" value="" placeholder="Some Starting lon" />
+  <label for="name">Job name</label>
+  <input id='name' type="text" name="name" value="" placeholder="Job name" /><br>
+  <label for="mass">Asteroid Mass</label>
+  <input id='mass' type="number" min="0" name="mass" value="" placeholder="Asteroid mass" /><br>
+  <label for="x">X position</label>
+  <input id='x' type="number" name="x" value="" placeholder="Some Starting x" /><br>
+  <label for='y'>Y position</label>
+  <input id='y' type="number" name="y" value="" placeholder="Some Starting y" /><br>
+  <label for="z">Z position</label>
+  <input id='z' type="number" name="z" value="" placeholder="Some Starting z" /><br>
+  <label for='xs'>X velocity</label>
+  <input id='xs' type="number" name="xs" value="" placeholder="Some Starting x velocity" /><br>
+  <label for="ys">Y velocity</label>
+  <input id='ys' type="number" name="ys" value="" placeholder="Some Starting y velocity" /><br>
+  <label for='zs'>Z velocity</label>
+  <input id='zs' type="number" name="zs" value="" placeholder="Some Starting z velocity" /><br>
+  <label for='start_date'>Simulation start</label>
+  <input id='start_date' type="date" name="start" value="" placeholder="Start date" /><br>
+  <label for='end_date'>Simulation end</label>
+  <input id='end_date' type="date" name="end" value="" placeholder="End date" /><br>
+  <label for='steps'>Simulation step count</label>
+  <input id='steps' type="number" min="1" name="steps" value="" placeholder="Steps to calculate" /><br>
   <input type="submit" value="Submit" />
 </form>
 """
@@ -24,14 +44,36 @@ route("/") do
 end
 #https://www.matecdev.com/posts/julia-structs.html
 Base.@kwdef mutable struct Location
-    test::String
-    lat::Float32
-    lon::Float32
+    name::String
+    mass::Float32
+    x::Float32
+    y::Float32
+    z::Float32
+    xs::Float32
+    ys::Float32
+    zs::Float32
+    start_days_since_2000::Int64
+    end_days_since_2000::Int64
+    steps::Int64
 end
 
 #https://genieframework.github.io/Genie.jl/dev/tutorials/12--Advanced_Routing_Techniques.html
 route("/", method = POST) do
-    location = Location(test=postpayload(:test, "PlaceholderTest"), lat=parseFloat(postpayload(:lat, "0")), lon=parseFloat(postpayload(:lon, "0")))
+    location = Location(
+    name=postpayload(:name,"0"),
+    mass=parseFloat(postpayload(:mass,"0")),
+    x=parseFloat(postpayload(:x,"0")),
+    y=parseFloat(postpayload(:y,"0")),
+    z=parseFloat(postpayload(:z,"0")),
+    xs=parseFloat(postpayload(:xs,"0")),
+    ys=parseFloat(postpayload(:ys,"0")),
+    zs=parseFloat(postpayload(:zs,"0")),
+    start_days_since_2000=parseDate(postpayload(:start, "0")),
+    end_days_since_2000=parseDate(postpayload(:end, "0")),
+    steps=parseInt(postpayload(:steps, "0"))
+    )
+
+    print(location)
     # html("Location  $(location.test), $(location.lat), $(location.lon) created successfully!")
     open("andrew-web/anim_fps15.gif") do f
         data = base64encode(read(f, String))
@@ -48,6 +90,21 @@ function parseFloat(toParse::String)::Float32
         return 0
     end
     return result
+end
+
+function parseInt(toParse::String)::Int64
+    result = tryparse(Int64,toParse)
+    if isnothing(result)
+        return 0
+    end
+    return result
+end
+
+function parseDate(toParse::String)::Int64
+    date = Date(Dates.DateTime(toParse, "yyyy-mm-dd"))
+    reference_date = Date(2000, 1, 1)
+    days_since_2000 = Dates.value(date - reference_date)
+    return days_since_2000
 end
 
 # gr() 
