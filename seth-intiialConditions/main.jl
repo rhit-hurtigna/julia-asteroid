@@ -26,10 +26,12 @@ function findJulianDayFromGregorian(year, month, dayOfMonth)
     # (367*year - 7 * (year + (month + 9)/12) / 4 - 3 * ((year + (month-9)/7)/100 + 1) / 4 + 275*month/9 + dayOfMonth - 730515)
     # (367*year - 7 * (year + (month+9)/12 ) / 4 - 3 * ( ( year + (month-9)/7)/100 + 1) / 4 + 275*month/9 + dayOfMonth - 730515)
 end
-CurrentJulianDay = findJulianDayFromGregorian(2023, 5, 17)
-print("Today is $CurrentJulianDay\n")
+# CurrentJulianDay = findJulianDayFromGregorian(2023, 5, 17)
+# OneSecondMore = CurrentJulianDay + 0.0000116
+
+# print("Today is $CurrentJulianDay\n")
 # CurrentJulianDay = 2460081.500000000
-CurrentT = (CurrentJulianDay - 2451545.0)/36525
+# CurrentT = (CurrentJulianDay - 2451545.0)/36525
 
 function findValuesForPresentDay(Planet_Values, CurrentT)
     Planet_a = Planet_Values["Planet_a0"] + Planet_Values["Planet_aCY"]*CurrentT
@@ -47,8 +49,8 @@ end
 # Mercury_longPeri = Mercury_longPeri0 + Mercury_longPeriCy*CurrentT
 # print("Mercury_longPeri is $Mercury_longPeri\n")
 # Mercury_longNode = Mercury_longNode0 + Mercury_longNodeCy*CurrentT
-Mercury_Values = findValuesForPresentDay(Mercury_InitialValues,CurrentT)
-print("Mercury_L is $(Mercury_Values["Planet_L"])\n")
+# Mercury_Values = findValuesForPresentDay(Mercury_InitialValues,CurrentT)
+# print("Mercury_L is $(Mercury_Values["Planet_L"])\n")
 function iterateOnE(Planet_M,Planet_e,Planet_EN,Planet_EStar)
     Planet_DM = Planet_M-(Planet_EN-Planet_EStar*sind(Planet_EN))
     Planet_DE = Planet_DM/(1-Planet_e*cosd(Planet_EN))
@@ -83,7 +85,7 @@ function calculateMoreValues(Planet_Values,CurrentT)
     Planet_Values["Planet_EN"] = Planet_EN
 end
 
-calculateMoreValues(Mercury_Values,CurrentT)
+# calculateMoreValues(Mercury_Values,CurrentT)
 # function iterateOnE(Planet_M,Planet_e,Planet_EN,Planet_EStar)
 #     Planet_DM = Planet_M-(Planet_EN-Planet_EStar*sind(Planet_EN))
 #     Planet_DE = Planet_DM/(1-Planet_e*cosd(Planet_EN))
@@ -129,7 +131,7 @@ function findPlanetHeliocentricInOwnOrbitalPlaneCoordinates(Planet_a,Planet_EN,P
     Planet_ZP = 0
     [Planet_XP, Planet_YP, Planet_ZP]
 end
-Mercury_P = findPlanetHeliocentricInOwnOrbitalPlaneCoordinates(Mercury_Values["Planet_a"],Mercury_Values["Planet_EN"],Mercury_Values["Planet_e"])
+# Mercury_P = findPlanetHeliocentricInOwnOrbitalPlaneCoordinates(Mercury_Values["Planet_a"],Mercury_Values["Planet_EN"],Mercury_Values["Planet_e"])
 #I think these are ecliptic
 function findPlanetElipticCordinates(Planet_W, Planet_longNode, Planet_I, Planet_XP, Planet_YP)
     Planet_XECL = (cosd(Planet_W)*cosd(Planet_longNode)-sind(Planet_W)*sind(Planet_longNode)*cosd(Planet_I))*Planet_XP + (-sind(Planet_W)*cosd(Planet_longNode)-cosd(Planet_W)*sind(Planet_longNode)*cosd(Planet_I))*Planet_YP
@@ -137,7 +139,7 @@ function findPlanetElipticCordinates(Planet_W, Planet_longNode, Planet_I, Planet
     Planet_ZECL = (sind(Planet_W)*sind(Planet_I))*Planet_XP+(cosd(Planet_W)*sind(Planet_I))*Planet_YP
     [Planet_XECL, Planet_YECL, Planet_ZECL]
 end
-Mercury_ECL = findPlanetElipticCordinates(Mercury_Values["Planet_W"], Mercury_Values["Planet_longNode"], Mercury_Values["Planet_I"], Mercury_P[1], Mercury_P[2])
+# Mercury_ECL = findPlanetElipticCordinates(Mercury_Values["Planet_W"], Mercury_Values["Planet_longNode"], Mercury_Values["Planet_I"], Mercury_P[1], Mercury_P[2])
 # Mercury_XECL = (cosd(Mercury_W)*cosd(Mercury_longNode)-sind(Mercury_W)*sind(Mercury_longNode)*cosd(Mercury_I))*Mercury_XP + (-sind(Mercury_W)*cosd(Mercury_longNode)-cosd(Mercury_W)*sind(Mercury_longNode)*cosd(Mercury_I))*Mercury_YP
 # Mercury_YECL = (cosd(Mercury_W)*sind(Mercury_longNode)+sind(Mercury_W)*cosd(Mercury_longNode)*cosd(Mercury_I))*Mercury_XP + (-sind(Mercury_W)*sind(Mercury_longNode)+cosd(Mercury_W)*cosd(Mercury_longNode)*cosd(Mercury_I))*Mercury_YP
 # Mercury_ZECL = (sind(Mercury_W)*sind(Mercury_I))*Mercury_XP+(cosd(Mercury_W)*sind(Mercury_I))*Mercury_YP
@@ -149,7 +151,7 @@ function findEquetorialCordinates(Planet_XECL, Planet_YECL, Planet_ZECL)
     Planet_ZEQ = sind(ObliquityJ200)*Planet_YECL+cosd(ObliquityJ200)*Planet_ZECL
     [Planet_XEQ, Planet_YEQ, Planet_ZEQ]
 end
-Mercury_EQ = findEquetorialCordinates(Mercury_ECL[1], Mercury_ECL[2], Mercury_ECL[3])
+# Mercury_EQ = findEquetorialCordinates(Mercury_ECL[1], Mercury_ECL[2], Mercury_ECL[3])
 # Mercury_XEQ = Mercury_XECL
 # Mercury_YEQ = cosd(ObliquityJ200)*Mercury_YECL-sind(ObliquityJ200)*Mercury_ZECL
 # Mercury_ZEQ = sind(ObliquityJ200)*Mercury_YECL+cosd(ObliquityJ200)*Mercury_ZECL 
@@ -160,10 +162,33 @@ Mercury_EQ = findEquetorialCordinates(Mercury_ECL[1], Mercury_ECL[2], Mercury_EC
 # print("Mercury_R may be $Mercury_R\n")
 # print("Mercury_RA may be $Mercury_RA\n")
 # print("Mercury_Decl may be $Mercury_Decl\n")
-print("Mercury_XECL may be $(Mercury_ECL[1])\n")
-print("Mercury_YECL may be $(Mercury_ECL[2])\n")
-print("Mercury_ZECL may be $(Mercury_ECL[3])\n")
-print("Mercury_XEQ may be $(Mercury_EQ[1])\n")
-print("Mercury_YEQ may be $(Mercury_EQ[2])\n")
-print("Mercury_ZEQ may be $(Mercury_EQ[3])\n")
+
+function findPositionFromDate(Year, Month, DayOfMonth)
+    CurrentJulianDay = findJulianDayFromGregorian(Year, Month, DayOfMonth)
+    CurrentT = (CurrentJulianDay - 2451545.0)/36525
+    Planet_Values = findValuesForPresentDay(Mercury_InitialValues,CurrentT)
+    calculateMoreValues(Planet_Values,CurrentT)
+    Planet_P = findPlanetHeliocentricInOwnOrbitalPlaneCoordinates(Planet_Values["Planet_a"],Planet_Values["Planet_EN"],Planet_Values["Planet_e"])
+    Planet_ECL = findPlanetElipticCordinates(Planet_Values["Planet_W"], Planet_Values["Planet_longNode"], Planet_Values["Planet_I"], Planet_P[1], Planet_P[2])
+    Planet_ECL
+    # Planet_EQ = findEquetorialCordinates(Planet_ECL[1], Planet_ECL[2], Planet_ECL[3])
+end
+
+Planet_ECL = findPositionFromDate(2023, 5, 17)
+Planet_ECLOffset = findPositionFromDate(2023, 5, 17+0.0000116)
+Planet_Velocity = [0.0,0.0,0.0]
+for i = 1:3
+    Planet_Velocity[i] = Planet_ECLOffset[i]-Planet_ECL[i]
+end
+# Planet_Velocity = Planet_ECL-Planet_ECLOffset
+print("Mercury_XECL may be $(Planet_ECL[1])\n")
+print("Mercury_YECL may be $(Planet_ECL[2])\n")
+print("Mercury_ZECL may be $(Planet_ECL[3])\n")
+print("Finding Mercury Velocity\n")
+print("Mercury_XVelocity may be $(Planet_Velocity[1])\n")
+print("Mercury_YVelocity may be $(Planet_Velocity[2])\n")
+print("Mercury_ZVelocity may be $(Planet_Velocity[3])\n")
+# print("Mercury_XEQ may be $(Mercury_EQ[1])\n")
+# print("Mercury_YEQ may be $(Mercury_EQ[2])\n")
+# print("Mercury_ZEQ may be $(Mercury_EQ[3])\n")
 # print("$(Mercury_EN-Mercury_ENPrev) hopefully this works\n")
