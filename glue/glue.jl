@@ -81,27 +81,30 @@ function do_glue(jobName, asterPosRow, asterVelRow, asterMass,
         planets[i] = Planet()
     end
 
-    # initialize a 3D plot with 1 empty series
-    plt = path3d(
-        1,
-        xlim = (xmin, xmax),
-        ylim = (ymin, ymax),
-        zlim = (zmin, zmax),
-        title = "Planet Simulator",
-        legend = false,
-        marker = 1
-    )
+    # # initialize a 3D plot with 1 empty series
+    # plt = path3d(
+    #     1,
+    #     xlim = (xmin, xmax),
+    #     ylim = (ymin, ymax),
+    #     zlim = (zmin, zmax),
+    #     title = "Planet Simulator",
+    #     legend = false,
+    #     marker = 1
+    # )
 
-    # initialize plots for other planets, changing the marker color each time.
-    for j=2:N + 1
-        path3d!(
-            1,
-            marker = N
-        )
-    end
+    # # initialize plots for other planets, changing the marker color each time.
+    # for j=2:N + 1
+    #     path3d!(
+    #         1,
+    #         marker = N
+    #     )
+    # end
 
     # build an animated gif by pushing new points to the plot, saving every frame
     anim = @animate for i=1:ts
+        xs = []
+        ys = []
+        zs = []
         for k=1:N
             step!(planets[k],i,k)
             push!(plt, k, planets[k].x, planets[k].y, planets[k].z)
