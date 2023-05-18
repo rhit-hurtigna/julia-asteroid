@@ -1,14 +1,25 @@
-Mercury_InitialValues = Dict([
+using Distributed
+using LinearAlgebra
+PlanetIntialValues = [Dict([
     ("Planet_a0",0.38709927),("Planet_aCY",0.00000037),
     ("Planet_e0",0.20563593),("Planet_eCy",0.00001906),
     ("Planet_I0",7.00497902),("Planet_ICy",-0.00594749),
     ("Planet_L0",252.25032350),("Planet_LCy",149472.67411175),
     ("Planet_longPeri0",77.45779628),("Planet_longPeriCy",0.16047689),
     ("Planet_longNode0",48.33076593),("Planet_longNodeCy",-0.12534081),
+    ("Planet_mass",0.0533)]),
+    Dict([
+    ("Planet_a0",1.00000261),("Planet_aCY",0.00000562),
+    ("Planet_e0",0.01671123),("Planet_eCy",-0.00004392),
+    ("Planet_I0",-0.00001531),("Planet_ICy",-0.01294668),
+    ("Planet_L0",100.46457166),("Planet_LCy",35999.37244981),
+    ("Planet_longPeri0",102.93768193),("Planet_longPeriCy",0.32327364),
+    ("Planet_longNode0",0.0),("Planet_longNodeCy",0.0),
     ("Planet_b",0),
     ("Planet_c",0),
     ("Planet_s",0),
-    ("Planet_f",0)]);
+    ("Planet_f",0),
+    ("Planet_mass",1)])];
 
 
 
@@ -58,7 +69,7 @@ function iterateOnE(Planet_M,Planet_e,Planet_EN,Planet_EStar)
 end
 
 function calculateMoreValues(Planet_Values,CurrentT)
-    Planet_W = Planet_Values["Planet_longPeri"] - Planet_Values["Planet_longNode"]
+    Planet_W = Planet_Values["Planet_longPeri"] - Planet_Values["Planet_longNode"] + get(Planet_Values,"Planet_b",0)*(CurrentT^2) + get(Planet_Values,"Planet_c",0)*cosd(get(Planet_Values,"Planet_f",0)*CurrentT) + get(Planet_Values,"Planet_s",0)*sind(get(Planet_Values,"Planet_f",0)*CurrentT)
     Planet_M = Planet_Values["Planet_L"] - Planet_Values["Planet_longPeri"]
     print("Planet_W is $Planet_W\n")
     print("Planet_M is $Planet_M before modulo\n")
@@ -166,28 +177,43 @@ end
 function findPositionFromDate(Year, Month, DayOfMonth)
     CurrentJulianDay = findJulianDayFromGregorian(Year, Month, DayOfMonth)
     CurrentT = (CurrentJulianDay - 2451545.0)/36525
-    Planet_Values = findValuesForPresentDay(Mercury_InitialValues,CurrentT)
-    calculateMoreValues(Planet_Values,CurrentT)
-    Planet_P = findPlanetHeliocentricInOwnOrbitalPlaneCoordinates(Planet_Values["Planet_a"],Planet_Values["Planet_EN"],Planet_Values["Planet_e"])
-    Planet_ECL = findPlanetElipticCordinates(Planet_Values["Planet_W"], Planet_Values["Planet_longNode"], Planet_Values["Planet_I"], Planet_P[1], Planet_P[2])
-    Planet_ECL
+    results = @distributed (hcat) for i = eachindex(PlanetIntialValues)
+        Planet_Values = findValuesForPresentDay(PlanetIntialValues[i],CurrentT)
+        calculateMoreValues(Planet_Values,CurrentT)
+        Planet_P = findPlanetHeliocentricInOwnOrbitalPlaneCoordinates(Planet_Values["Planet_a"],Planet_Values["Planet_EN"],Planet_Values["Planet_e"])
+        Planet_ECL = findPlanetElipticCordinates(Planet_Values["Planet_W"], Planet_Values["Planet_longNode"], Planet_Values["Planet_I"], Planet_P[1], Planet_P[2])
+        Planet_ECL
+    end
+    # for i = eachindex(PlanetIntialValues)
+    #     Planet_Values = findValuesForPresentDay(PlanetIntialValues[i],CurrentT)
+    #     calculateMoreValues(Planet_Values,CurrentT)
+    #     Planet_P = findPlanetHeliocentricInOwnOrbitalPlaneCoordinates(Planet_Values["Planet_a"],Planet_Values["Planet_EN"],Planet_Values["Planet_e"])
+    #     Planet_ECL = findPlanetElipticCordinates(Planet_Values["Planet_W"], Planet_Values["Planet_longNode"], Planet_Values["Planet_I"], Planet_P[1], Planet_P[2])
+    #     push!(results,Planet_ECL)
+    # end
+    transpose(results)
     # Planet_EQ = findEquetorialCordinates(Planet_ECL[1], Planet_ECL[2], Planet_ECL[3])
 end
 
 Planet_ECL = findPositionFromDate(2023, 5, 17)
 Planet_ECLOffset = findPositionFromDate(2023, 5, 17+0.0000116)
-Planet_Velocity = [0.0,0.0,0.0]
-for i = 1:3
-    Planet_Velocity[i] = Planet_ECLOffset[i]-Planet_ECL[i]
-end
+Planet_Velocities = Planet_ECLOffset-Planet_ECL
+# Planet_Velocity = [0.0,0.0,0.0]
+# for i = 1:3
+    # Planet_Velocity[i] = Planet_ECLOffset[i]-Planet_ECL[i]
+# end
 # Planet_Velocity = Planet_ECL-Planet_ECLOffset
-print("Mercury_XECL may be $(Planet_ECL[1])\n")
-print("Mercury_YECL may be $(Planet_ECL[2])\n")
-print("Mercury_ZECL may be $(Planet_ECL[3])\n")
-print("Finding Mercury Velocity\n")
-print("Mercury_XVelocity may be $(Planet_Velocity[1])\n")
-print("Mercury_YVelocity may be $(Planet_Velocity[2])\n")
-print("Mercury_ZVelocity may be $(Planet_Velocity[3])\n")
+print("Planet positions Mercury,Earth (X,Y,Z)\n")
+Base.print_matrix(stdout, Planet_ECL)
+print("\nPlanet velocities Mercury,Earth (X,Y,Z)\n")
+Base.print_matrix(stdout, Planet_Velocities)
+# print("Mercury_XECL may be $(Planet_ECL[1][1])\n")
+# print("Mercury_YECL may be $(Planet_ECL[1][2])\n")
+# print("Mercury_ZECL may be $(Planet_ECL[1][3])\n")
+# print("Finding Mercury Velocity\n")
+# print("Mercury_XVelocity may be $(Planet_Velocity[1])\n")
+# print("Mercury_YVelocity may be $(Planet_Velocity[2])\n")
+# print("Mercury_ZVelocity may be $(Planet_Velocity[3])\n")
 # print("Mercury_XEQ may be $(Mercury_EQ[1])\n")
 # print("Mercury_YEQ may be $(Mercury_EQ[2])\n")
 # print("Mercury_ZEQ may be $(Mercury_EQ[3])\n")
