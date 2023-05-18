@@ -21,7 +21,7 @@ function do_glue(jobName, asterPosRow, asterVelRow, asterMass,
     V0 = [0 0 0 ; 0 -0.01719938919 0; 0 0.01719938919 0]
     M = [333060.4016 ; 1; 1]
     # g = 6.67430e-11
-    g = 1.377897778e-24 # AU, EM, and days (maybe days)
+    g = 8.887062349e-10 # AU, EM, and days
     T = end_days_since_2000 - start_days_since_2000
     dT = T / numSteps
     dFrame = T / 100
