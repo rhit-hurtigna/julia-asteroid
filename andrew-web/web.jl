@@ -76,11 +76,11 @@ route("/", method = POST) do
     steps=parseInt(postpayload(:steps, "0"))
     )
 
+    html("Calculating the thing...")
     do_glue(location.name, [location.x location.y location.z], 
     [location.xs location.ys location.zs], location.mass, location.start_days_since_2000, 
     location.end_days_since_2000, location.steps)
     # print(location)
-    html("Calculating the thing...")
     open("glue_anims/$(location.name).gif") do f
         open("glue_anims/$(location.name)_closeness.png") do f2
             data = base64encode(read(f, String))
