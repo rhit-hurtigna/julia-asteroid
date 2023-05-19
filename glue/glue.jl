@@ -6,6 +6,8 @@ using .InitialConds
 using Plots
 export do_glue
 
+num_parallel = 300
+
 # define Planet Struct
 Base.@kwdef mutable struct Planet
     x::Float64 = 1
@@ -39,7 +41,10 @@ function do_glue(jobName, asterPosRow, asterVelRow, asterMass,
 
     # ANIMATION START
     # get M x N x 3 matrix of the planets and their coordinates throughout time. See sim.jl for more details.
-    M = runSim(P0, V0, M, g, dT, T, dFrame)
+    (close_dist, M) = runSimMain(num_parallel, P0, V0, M, g, dT, T, dFrame)
+    histogram(close_dist)
+    savefig("glue_anims/$(jobName)_closeness.png")
+
     # modify coords of planet by going to next timestep in the M x N x 3 matrix. N will always be the planet index.
     function step!(p::Planet, ti, n)
         p.x = M[ti,n,1]
@@ -81,36 +86,33 @@ function do_glue(jobName, asterPosRow, asterVelRow, asterMass,
         planets[i] = Planet()
     end
 
-    # # initialize a 3D plot with 1 empty series
-    # plt = path3d(
-    #     1,
-    #     xlim = (xmin, xmax),
-    #     ylim = (ymin, ymax),
-    #     zlim = (zmin, zmax),
-    #     title = "Planet Simulator",
-    #     legend = false,
-    #     marker = 1
-    # )
+    # initialize a 3D plot with 1 empty series
+    plt = path3d(
+        1,
+        xlim = (xmin, xmax),
+        ylim = (ymin, ymax),
+        zlim = (zmin, zmax),
+        title = "Planet Simulator",
+        legend = false,
+        marker = 1
+    )
 
-    # # initialize plots for other planets, changing the marker color each time.
-    # for j=2:N + 1
-    #     path3d!(
-    #         1,
-    #         marker = N
-    #     )
-    # end
+    # initialize plots for other planets, changing the marker color each time.
+    for j=2:N + 1
+        path3d!(
+            1,
+            marker = N
+        )
+    end
 
     # build an animated gif by pushing new points to the plot, saving every frame
     anim = @animate for i=1:ts
-        xs = []
-        ys = []
-        zs = []
         for k=1:N
             step!(planets[k],i,k)
             push!(plt, k, planets[k].x, planets[k].y, planets[k].z)
         end
-
-        plot!(plt, camera = (i, 70), )
+    
+        plot!(plt, camera = (i, 20), )
     end every 1
 
     gif(anim, "glue_anims/$(jobName).gif", fps=15);

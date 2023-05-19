@@ -3,7 +3,7 @@ using Test
 using Random
 using Pkg
 Pkg.add("Primes")
-
+using Base.Threads
 Random.seed!(56789)
 addprocs(5)
 @everywhere using Primes
@@ -19,13 +19,10 @@ addprocs(5)
 # The bounds include M and N.
 #
 function count_primes_parallel(M, N)
-    num_primes = 0
-    for i = M:N
-        if isprime(i)
-            num_primes += 1
-        end
+    num_primes = @distributed (+) for i = M:N
+        isprime(i) ? 1 : 0
     end
-    num_primes # the last value returns in Julia
+    num_primes
 end
 
 # Don't modify this -- we use it for testing
@@ -64,7 +61,7 @@ end
 #
 function matr_mult_parallel(A, B, N)
     C = zeros(N, N)
-    for row_index = 1:N
+    @threads for row_index = 1:N
         for col_index = 1:N
             row_of_A = A[row_index, :]
             col_of_B = B[:, col_index]

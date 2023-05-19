@@ -77,7 +77,7 @@ anim = @animate for i=1:ts
         push!(plt, k, planets[k].x, planets[k].y, planets[k].z)
     end
 
-    plot!(plt, camera = (i, 20), )
+    plot!(plt, camera = (i, 60), )
 end every 1
 
 gif(anim, "animations/planet_anim.gif", fps=15);

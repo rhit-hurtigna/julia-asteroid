@@ -1,6 +1,6 @@
 module SethStuff
 export findPositionFromDate
-using Distributed
+# using Distributed
 using LinearAlgebra
 #Mercury, Venus, Earth-Moon Baryoncenter, Mars
 PlanetIntialValues = [Dict([
@@ -192,12 +192,15 @@ end
 function findPositionFromDate(Year, Month, DayOfMonth)
     CurrentJulianDay = findJulianDayFromGregorian(Year, Month, DayOfMonth)
     CurrentT = (CurrentJulianDay - 2451545.0)/36525
-    results = @distributed (hcat) for i = eachindex(PlanetIntialValues)
+    results = ones(3,0)
+    for i = eachindex(PlanetIntialValues)
         Planet_Values = findValuesForPresentDay(PlanetIntialValues[i],CurrentT)
         calculateMoreValues(Planet_Values,CurrentT)
         Planet_P = findPlanetHeliocentricInOwnOrbitalPlaneCoordinates(Planet_Values["Planet_a"],Planet_Values["Planet_EN"],Planet_Values["Planet_e"])
         Planet_ECL = findPlanetElipticCordinates(Planet_Values["Planet_W"], Planet_Values["Planet_longNode"], Planet_Values["Planet_I"], Planet_P[1], Planet_P[2])
-        Planet_ECL
+        # print(results)
+        # print(Planet_ECL)
+        results = hcat(results, Planet_ECL)
     end
     # for i = eachindex(PlanetIntialValues)
     #     Planet_Values = findValuesForPresentDay(PlanetIntialValues[i],CurrentT)

@@ -1,6 +1,29 @@
 module Simulator
 using LinearAlgebra: norm
-export runSim
+using Distributions
+using Distributed
+export runSimMain
+
+function runSimMain(sims, P0, V0, M, g, dT, T, dFrame)
+    dists = runManySims(sims, P0, V0, M, g, dT, T, dFrame)
+    (_, hist) = runSim(P0, V0, M, g, dT, T, dFrame)
+    (dists, hist)
+end
+
+function runManySims(sims, P0, V0, M, g, dT, T, dFrame)
+    # my_procs = addprocs(10)
+    # my_procs = addprocs(4)
+
+    @distributed (vcat) for i = 1:sims
+        d = Normal(0, 0.02)
+        P0[1,:] += rand(d, 3)
+        d = Normal(0, 0.00002)
+        V0[1,:] += rand(d, 3)
+        (minDist, _) = runSim(P0, V0, M, g, dT, T, T/2)
+        minDist
+    end
+    # @sync rmprocs(my_procs)
+end
 
 """
 runSim
@@ -17,6 +40,7 @@ Returns MxNx3 matrix of snapshots, where
 M is close to [T/dFrame]
 """
 function runSim(P0, V0, M, g, dT, T, dFrame)
+    minDist = Inf
     Vlast = V0
     Plast = P0
     skip = floor(Int,dFrame/dT)
@@ -28,11 +52,13 @@ function runSim(P0, V0, M, g, dT, T, dFrame)
         # println(A)
         Vlast = Vlast .+ dT*A
         Plast = Plast .+ dT*Vlast
+        dist = norm(Plast[1,:] - Plast[5,:])
+        minDist = min(dist, minDist)
         if mod(i, skip) == 0
             Hist[floor(Int,i/skip)+1,:,:] = Plast
         end
     end
-    Hist
+    (minDist, Hist)
 end
 
 """

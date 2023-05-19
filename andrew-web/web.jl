@@ -82,9 +82,12 @@ route("/", method = POST) do
     # print(location)
     html("Calculating the thing...")
     open("glue_anims/$(location.name).gif") do f
-        data = base64encode(read(f, String))
-        html("""<img src="data:andrew-web/anim_fps15.gif;base64,$data">""")
-        # html(read(f,String))
+        open("glue_anims/$(location.name)_closeness.png") do f2
+            data = base64encode(read(f, String))
+            data2 = base64encode(read(f2, String))
+            html("""<img src="data:andrew-web/anim_fps15.gif;base64,$data"><br><img src="data:andrew-web/anim_fps15.gif;base64,$data2">""")
+            # html(read(f,String))
+        end
     end
 end
 

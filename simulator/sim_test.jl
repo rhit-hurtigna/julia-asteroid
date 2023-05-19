@@ -10,6 +10,6 @@ T = 3.156e+7
 dT = T / 10000
 dFrame = T / 100
 
-results = runSim(P0, V0, M, g, dT, T, dFrame)
+(_, results) = runSim(0, P0, V0, M, g, dT, T, dFrame)
 
 println(results)
